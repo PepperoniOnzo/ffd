@@ -20,12 +20,12 @@ var initCommand = &cobra.Command{
 				//
 				// 	Creating settings file
 				//
-				if err := os.Mkdir(internal.GetConfigsDirectory(), os.ModePerm); err != nil {
+				if err := os.Mkdir(directoryUtil.GetConfigFolder(), os.ModePerm); err != nil {
 					internal.LogError("Failed to create setting folder.")
 					return
 				}
 
-				if _, err := os.Create(internal.GetSettingFileDirectory()); err != nil {
+				if _, err := os.Create(directoryUtil.GetConfigFile()); err != nil {
 					internal.LogError("Failed to create setting file.")
 					return
 				}
@@ -41,7 +41,7 @@ var initCommand = &cobra.Command{
 				//
 				// Updating gitignore if exist
 				//
-				var gitignoreFile = internal.GetGitignoreFileDirectory()
+				var gitignoreFile = directoryUtil.GetGitignoreFile()
 				if _, err := os.Stat(gitignoreFile); os.IsNotExist(err) {
 					return
 				}
@@ -51,11 +51,11 @@ var initCommand = &cobra.Command{
 					return
 				}
 
-				if strings.Contains(string(fileText), ".ffd\n") {
+				if strings.Contains(string(fileText), ".ffd") {
 					return
 				}
 
-				file, err := os.Open(gitignoreFile)
+				file, err := os.OpenFile(gitignoreFile, os.O_APPEND|os.O_WRONLY, 0664)
 				if err != nil {
 					file.Close()
 					return
@@ -65,7 +65,7 @@ var initCommand = &cobra.Command{
 				writer := bufio.NewWriter(file)
 				defer writer.Flush()
 
-				writer.WriteString("\n ffd related\n.ffd\n")
+				writer.WriteString("\n\n# ffd related\n.ffd")
 
 				writer.Flush()
 				file.Close()

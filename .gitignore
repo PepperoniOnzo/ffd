@@ -2,5 +2,8 @@
 main
 ffd
 
+# other
+.DS_STORE
+
 # vscode related
 .vscode

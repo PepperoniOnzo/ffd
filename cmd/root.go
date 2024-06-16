@@ -12,14 +12,18 @@ import (
 )
 
 func init() {
+	directoryUtil = internal.NewDirectoryUtil()
 	cobra.OnInitialize(initConfigs)
 	rootCmd.AddCommand(initCommand)
+	rootCmd.AddCommand(buildCommand)
+	rootCmd.AddCommand(doctorCommand)
+	rootCmd.AddCommand(testCommand)
 }
 
 func initConfigs() {
 	viper.SetConfigName("ffd")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(internal.GetConfigsDirectory())
+	viper.AddConfigPath(directoryUtil.GetConfigFolder())
 
 	if err := viper.ReadInConfig(); err != nil {
 		return
@@ -30,6 +34,7 @@ func initConfigs() {
 	}
 }
 
+var directoryUtil *internal.DirectoryUtil
 var configs *models.EnvConfigs
 var version string = "0.0.1"
 
@@ -41,7 +46,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			// cmd.Help()
-			initCommand.Run(cmd, args)
+			testCommand.Run(cmd, args)
 			os.Exit(0)
 		}
 	},

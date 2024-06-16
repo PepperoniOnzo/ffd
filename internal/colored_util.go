@@ -19,3 +19,13 @@ func LogMedium(text string) {
 func LogSuccess(text string) {
 	fmt.Println(greeColor + text + resetColor)
 }
+
+// Log depend on status - [✓, ✗]
+func LogStatus(text string, ok bool) {
+	if ok {
+		fmt.Println(greeColor + "[✓] " + resetColor + text)
+		return
+	}
+
+	fmt.Println(redColor + "[✗] " + resetColor + text)
+}
